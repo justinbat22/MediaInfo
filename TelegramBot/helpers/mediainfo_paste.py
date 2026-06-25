@@ -1,10 +1,6 @@
-import requests
-import json
-import re
-
-
 import html
 import re
+from telegraph import Telegraph
 
 def html_builder(title: str, text: str):
     page = f"<h2>🎬 {html.escape(title)}</h2>"
@@ -70,7 +66,7 @@ def html_builder(title: str, text: str):
 
     return page
   
-from telegraph import Telegraph
+
 
 telegraph = Telegraph()
 telegraph.create_account(short_name="MediaInfoBot")
