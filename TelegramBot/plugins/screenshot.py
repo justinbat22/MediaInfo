@@ -11,7 +11,7 @@ import subprocess
 from urllib.parse import unquote
 from requests_toolbelt import MultipartEncoder
 
-from pyrogram.types import Message
+from pyrogram.types import Message, InputMediaPhoto
 from pyrogram import Client, filters
 from pyrogram.errors import MessageNotModified
 
@@ -23,46 +23,34 @@ from TelegramBot.helpers.gdrivehelper import GoogleDriveHelper
 
 async def slowpics_collection(message, file_name, path):
     """
-    Uploads image(s) to https://slow.pics/ from a specified directory.
+    Sends generated screenshots directly to Telegram instead of Slow.pics.
     """
 
     msg = await message.reply_text(
-        "uploading generated screenshots to slow.pics.", quote=True)
+        "Uploading generated screenshots to Telegram...",
+        quote=True
+    )
 
-    img_list = os.listdir(path)
-    img_list = sorted(img_list)
+    img_list = sorted(os.listdir(path))
 
-    data = {
-        "collectionName": f"{unquote(file_name)}",
-        "hentai": "false",
-        "optimizeImages": "false",
-        "public": "false"}
+    media = []
+    files = []
 
-    for i in range(0, len(img_list)):
-        data[f"images[{i}].name"] = img_list[i].split(".")[0]
-        data[f"images[{i}].file"] = (
-            img_list[i],
-            open(f"{path}/{img_list[i]}", "rb"),
-            "image/png")
+    try:
+        for img in img_list:
+            fp = open(os.path.join(path, img), "rb")
+            files.append(fp)
+            media.append(InputMediaPhoto(fp))
 
-    with requests.Session() as client:
-        client.get("https://slow.pics/api/collection")
-        files = MultipartEncoder(data)
-        length = str(files.len)
+        await message.reply_media_group(media)
 
-        headers = {
-            "Content-Length": length,
-            "Content-Type": files.content_type,
-            "Origin": "https://slow.pics/",
-            "Referer": "https://slow.pics/collection",
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.88 Safari/537.36",
-            "X-XSRF-TOKEN": client.cookies.get_dict()["XSRF-TOKEN"]}
-
-        response = client.post(
-            "https://slow.pics/api/collection", data=files, headers=headers)
         await msg.edit(
-            f"File Name: `{unquote(file_name)}`\n\nFrames: https://slow.pics/c/{response.text}",
-            disable_web_page_preview=True)
+            f"✅ Successfully generated screenshots for `{unquote(file_name)}`"
+        )
+
+    finally:
+        for fp in files:
+            fp.close()
 
 
 async def generate_ss_from_file(
