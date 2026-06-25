@@ -95,13 +95,13 @@ async def generate_spek(_, message: Message):
         return await replymsg.edit(
             "Can not able to generate spectograph of given audio.")
 
-    await replymsg.edit("☁️ Uploading to Telegraph...")
-    image_url = await telegraph_image_paste(f"download/{file_name}.png")
-    await message.reply_text(
-    f"**File:** `{file_name}`\n\n**Spectrogram:** {image_url}",
-    quote=True,
-    disable_web_page_preview=False,
-    )
+    await replymsg.edit("📤 Uploading spectrogram...")
+
+    await message.reply_photo(
+        photo=f"download/{file_name}.png",
+        caption=f"**File:** `{file_name}`",
+        quote=True,
+)
 
     await replymsg.delete()
     os.remove(f"download/{file_name}")
