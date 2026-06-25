@@ -81,8 +81,8 @@ async def generate_ss_from_file(
             f"ffmpeg -nostdin -y "
             f"-ss {timestamp} "
             f"-i 'download/{file_name}' "
+            f"-vf "zscale=t=bt709:m=bt709:r=tv,format=rgb24"
             f"-frames:v 1 "
-            f"-update 0 "
             f"'{outputpath}'"
         )
         print(ffmpeg_command)
@@ -134,7 +134,7 @@ async def generate_ss_from_link(
         f'-y '
         f'-ss {timestamp} '
         f'-i "{file_url}" '
-        f'-vf "{vf_flags}" '
+        f'-vf "zscale=t=bt709:m=bt709:r=tv,format=rgb24"
         f'-frames:v {frame_count} '
         f'"{download_path}/%02d.png"'
     )
