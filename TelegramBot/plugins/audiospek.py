@@ -5,7 +5,6 @@ from pyrogram import filters, Client
 
 from TelegramBot.helpers.filters import check_auth
 from TelegramBot.helpers.functions import async_subprocess
-from TelegramBot.helpers.pasting_services import telegraph_image_paste
 import time
 
 _last_update = {}
