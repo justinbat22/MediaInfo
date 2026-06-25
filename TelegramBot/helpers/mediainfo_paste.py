@@ -3,8 +3,7 @@ import re
 from telegraph import Telegraph
 from TelegramBot.config import TELEGRAPH_TOKEN
 
-telegraph = Telegraph()
-telegraph.access_token = TELEGRAPH_TOKEN
+telegraph = Telegraph(access_token=TELEGRAPH_TOKEN)
 
 def html_builder(title: str, text: str):
     page = f"<b>🎬 {html.escape(title)}</b><br><br>"
