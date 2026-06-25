@@ -77,7 +77,14 @@ async def generate_ss_from_file(
         outputpath = (
             f"{download_path}/{str((frame_count - loop_count) + 1).zfill(2)}.png")
 
-        ffmpeg_command = f"ffmpeg -y -ss {timestamp} -i 'download/{file_name}' -vframes 1 {outputpath}"
+        ffmpeg_command = (
+            f"ffmpeg -nostdin -y "
+            f"-ss {timestamp} "
+            f"-i 'download/{file_name}' "
+            f"-frames:v 1 "
+            f"-update 0 "
+            f"'{outputpath}'"
+        )
         print(ffmpeg_command)
 
         result = await async_subprocess(ffmpeg_command)
@@ -120,7 +127,17 @@ async def generate_ss_from_link(
         if hdr
         else f"fps=1/{fps}")
 
-    ffmpeg_command = f"ffmpeg -headers '{headers}' -y -ss {timestamp} -i {file_url} -vf '{vf_flags}' -vframes {frame_count} {download_path}/%02d.png"
+    ffmpeg_command = (
+        f'ffmpeg -nostdin '
+        f'-user_agent "Mozilla/5.0" '
+        f'-headers "{headers}\r\n" '
+        f'-y '
+        f'-ss {timestamp} '
+        f'-i "{file_url}" '
+        f'-vf "{vf_flags}" '
+        f'-frames:v {frame_count} '
+        f'"{download_path}/%02d.png"'
+    )
     print(ffmpeg_command)
 
     shell_output = await async_subprocess(ffmpeg_command)
@@ -128,6 +145,11 @@ async def generate_ss_from_link(
     print(shell_output)
 
     await replymsg.delete()
+    print("Generated files:", os.listdir(download_path))
+
+    for f in sorted(os.listdir(download_path)):
+        p = os.path.join(download_path, f)
+        print(f, os.path.getsize(p))
     await slowpics_collection(message, file_name, path=f"{os.getcwd()}/{download_path}")
     shutil.rmtree(download_path)
 
