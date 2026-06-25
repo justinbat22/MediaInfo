@@ -1,5 +1,10 @@
 import html
 import re
+from telegraph import Telegraph
+from TelegramBot.config import TELEGRAPH_TOKEN
+
+telegraph = Telegraph()
+telegraph.access_token = TELEGRAPH_TOKEN
 
 def html_builder(title: str, text: str):
     page = f"<b>🎬 {html.escape(title)}</b><br><br>"
@@ -55,10 +60,6 @@ def html_builder(title: str, text: str):
 
     return page
 
-from telegraph import Telegraph
-
-telegraph = Telegraph()
-telegraph.create_account(short_name="MediaInfoBot")
 
 def mediainfo_paste(text: str, title: str):
     html_content = html_builder(title, text)
@@ -68,4 +69,4 @@ def mediainfo_paste(text: str, title: str):
         html_content=html_content
     )
 
-    return "https://telegra.ph/" + response["path"]
+    return response["url"]
