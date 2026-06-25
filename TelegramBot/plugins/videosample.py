@@ -135,6 +135,8 @@ async def ddl_videosample(message, url, duration):
 
         if not filename:
             filename = "sample.mkv"
+        if "." not in filename:
+            filename += ".mkv"
         if len(filename) > 60:
             filename = filename[-60:]
 
