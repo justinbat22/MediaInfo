@@ -29,8 +29,10 @@ ABOUT_CAPTION = f"""• Python version : {__python_version__}
 • Bot version : {__version__}
 • pyrogram  version : {__pyro_version__}
 
-**Github Repo**: https://github.com/justinbat22/MediaInfo/"""
+**Github Repo**: https://github.com/justinbat22/MediaInfo/
+*Bot Made By**: @Batman_mp3"""
 
 START_ANIMATION = "https://telegra.ph/file/c0857672b427bec8542f6.mp4"
 
-START_CAPTION = """ Hello There! I am a Telegram Bot which can generate screenshots from video files, trim sample video files, and create mediainfo for Telegram files, Direct download links and Google Drive links.\n\nPress commands button to know more about bot commands and its usage."""
+START_CAPTION = """ Hello There! I am a Telegram Bot which can generate screenshots from video files, trim sample video files, and create mediainfo for Telegram files, Direct download links and Google Drive links.\n\nPress commands button to know more about bot commands and its usage.
+🧑‍💻Dev - @Batman_mp3"""
