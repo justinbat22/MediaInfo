@@ -78,7 +78,11 @@ async def generate_ss_from_file(
             f"{download_path}/{str((frame_count - loop_count) + 1).zfill(2)}.png")
 
         ffmpeg_command = f"ffmpeg -y -ss {timestamp} -i 'download/{file_name}' -vframes 1 {outputpath}"
+        print(ffmpeg_command)
+
         result = await async_subprocess(ffmpeg_command)
+
+        print(result)
         if "File ended prematurely" in result:
             loop_count += 1
         loop_count -= 1
@@ -117,7 +121,11 @@ async def generate_ss_from_link(
         else f"fps=1/{fps}")
 
     ffmpeg_command = f"ffmpeg -headers '{headers}' -y -ss {timestamp} -i {file_url} -vf '{vf_flags}' -vframes {frame_count} {download_path}/%02d.png"
+    print(ffmpeg_command)
+
     shell_output = await async_subprocess(ffmpeg_command)
+
+    print(shell_output)
 
     await replymsg.delete()
     await slowpics_collection(message, file_name, path=f"{os.getcwd()}/{download_path}")
