@@ -17,6 +17,7 @@ async def update(_, message: Message):
     LOGGER(__name__).info("Bot Updated with latest commits. Restarting now..")
     await msg.edit("Changes pulled with latest commits. Restarting bot now... ")
     os.execl(sys.executable, sys.executable, "-m", "TelegramBot")
+    await msg.edit("Bot Restarted 🎉")
 
 
 @Client.on_message(filters.command(["log", "logs"]) & sudo_cmd)
