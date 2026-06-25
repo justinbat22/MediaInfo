@@ -100,7 +100,7 @@ async def generate_spek(_, message: Message):
         photo=f"download/{file_name}.png",
         caption=f"**File:** `{file_name}`",
         quote=True,
-)
+    )
 
     await replymsg.delete()
     os.remove(f"download/{file_name}")
