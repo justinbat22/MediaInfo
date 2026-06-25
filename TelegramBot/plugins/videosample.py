@@ -59,6 +59,12 @@ async def generate_videosample_from_link(
         f'"{output_path}"'
     )
     shell_output = await async_subprocess(ffmpeg_command)
+    print(shell_output)
+    print("Output exists:", os.path.exists(output_path))
+    print("Output path:", output_path)
+
+    if not os.path.exists(output_path):
+        return await replymsg.edit("FFmpeg failed to create the sample video.")
     print(ffmpeg_command)
     print(shell_output)
 
