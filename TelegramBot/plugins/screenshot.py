@@ -21,9 +21,13 @@ from TelegramBot.helpers.filters import check_auth
 from TelegramBot.helpers.gdrivehelper import GoogleDriveHelper
 
 
+from pyrogram.types import InputMediaPhoto
+from urllib.parse import unquote
+import os
+
 async def slowpics_collection(message, file_name, path):
     """
-    Sends generated screenshots directly to Telegram instead of Slow.pics.
+    Sends generated screenshots directly to Telegram.
     """
 
     msg = await message.reply_text(
@@ -34,25 +38,24 @@ async def slowpics_collection(message, file_name, path):
     img_list = sorted(os.listdir(path))
 
     media = []
-    files = []
 
-    try:
-        for img in img_list:
-            fp = open(os.path.join(path, img), "rb")
-            files.append(fp)
-            media.append(InputMediaPhoto(fp))
+    for img in img_list:
+        img_path = os.path.join(path, img)
 
-        await message.reply_media_group(media)
+        # Skip empty or invalid files
+        if not os.path.isfile(img_path) or os.path.getsize(img_path) == 0:
+            continue
 
-        await msg.edit(
-            f"✅ Successfully generated screenshots for `{unquote(file_name)}`"
-        )
+        media.append(InputMediaPhoto(media=img_path))
 
-    finally:
-        for fp in files:
-            fp.close()
+    if not media:
+        return await msg.edit("❌ No screenshots were generated.")
 
+    await message.reply_media_group(media)
 
+    await msg.edit(
+        f"✅ Successfully generated screenshots for `{unquote(file_name)}`"
+    )
 async def generate_ss_from_file(
     message, replymsg, file_name, frame_count, file_duration
 ):
