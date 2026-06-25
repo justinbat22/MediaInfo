@@ -217,7 +217,7 @@ async def ddl_screenshot(message, url, time, frame_count, fps, hdr, dv):
     replymsg = await message.reply_text(
         "Checking direct download url....**", quote=True)
     try:
-        file_url = f"'{url}'"
+        file_url = url
         file_name = re.search(".+/(.+)", url).group(1)
         if len(file_name) > 60:
             file_name = file_name[-60:]
