@@ -72,15 +72,18 @@ async def generate_spek(_, message: Message):
 
     wav_file = f"download/{file_name}.wav"
 
+    await replymsg.edit("🎵 Converting audio...")
+
     await async_subprocess(
         f"ffmpeg -y -i 'download/{file_name}' -vn -ac 2 -ar 48000 '{wav_file}'"
     )
 
     await replymsg.edit("📊 Generating spectrogram...")
-    
+
     await async_subprocess(
-        f"sox '{wav_file}' -n remix 1 spectrogram -x 1000 -y 513 -z 120 -w Kaiser -o 'download/{file_name}.png'"
+        f"sox '{wav_file}' -n spectrogram -x 1000 -y 513 -z 120 -w Kaiser -o 'download/{file_name}.png'"
     )
+    print("PNG:", os.path.exists(f"download/{file_name}.png"))
 
     os.remove(wav_file)
 
