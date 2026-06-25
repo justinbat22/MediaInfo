@@ -51,7 +51,9 @@ async def slowpics_collection(message, file_name, path):
     if not media:
         return await msg.edit("❌ No screenshots were generated.")
 
-    await message.reply_photo(media[0].media)
+    for photo in media:
+        print("Sending:", photo.media)
+        await message.reply_photo(photo.media)
 
     await msg.edit(
         f"✅ Successfully generated screenshots for `{unquote(file_name)}`"
