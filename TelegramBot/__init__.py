@@ -73,7 +73,7 @@ async def clear_download():
     os.mkdir("download")
 
 
-scheduler = AsyncIOScheduler()
+scheduler = AsyncIOScheduler(event_loop=loop)
 scheduler.add_job(clear_download, "interval", minutes=1440)
 scheduler.start()
 
