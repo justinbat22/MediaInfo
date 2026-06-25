@@ -90,7 +90,11 @@ async def generate_spek(_, message: Message):
 
     await replymsg.edit("☁️ Uploading to Telegraph...")
     image_url = await telegraph_image_paste(f"download/{file_name}.png")
-    await message.reply_text(f"[{file_name}]({image_url})", quote=True)
+    await message.reply_text(
+    f"**File:** `{file_name}`\n\n**Spectrogram:** {image_url}",
+    quote=True,
+    disable_web_page_preview=False,
+    )
 
     await replymsg.delete()
     os.remove(f"download/{file_name}")
