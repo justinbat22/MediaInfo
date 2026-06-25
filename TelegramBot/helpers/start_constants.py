@@ -17,13 +17,19 @@ COMMAND_TEXT = """🗒️ Documentation for commands available to user's
 
 • /spek or /sox: Generates audio Spectogram from Telegram audio files.
 
+• Additional Flags for screenshot and mediainfo command :-
+
+--count=10 [ Number of screenshots. Default 10, Max 20 ], --fps=10 [ Difference between two consecutive screenshots in seconds. Default 5, Max 15 ]. --time=01:20:10 [ Time from where the screenshots should be taken in HH:MM:SS format ], --hdr [ For HDR Videos.]
+
+--r [ For raw Mediainfo in document format. ]
+
 """
 
 ABOUT_CAPTION = f"""• Python version : {__python_version__}
 • Bot version : {__version__}
 • pyrogram  version : {__pyro_version__}
 
-**Github Repo**: https://github.com/sanjit-sinha/Tg-MediaInfoBot"""
+**Github Repo**: https://github.com/justinbat22/MediaInfo/"""
 
 START_ANIMATION = "https://telegra.ph/file/c0857672b427bec8542f6.mp4"
 
