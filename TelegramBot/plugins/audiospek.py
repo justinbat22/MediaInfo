@@ -74,9 +74,14 @@ async def generate_spek(_, message: Message):
 
     await replymsg.edit("🎵 Converting audio...")
 
-    await async_subprocess(
-        f"ffmpeg -y -i 'download/{file_name}' -vn -ac 2 -ar 48000 '{wav_file}'"
+    print("Starting FFmpeg")
+
+    output = await async_subprocess(
+        f"ffmpeg -nostdin -y -i 'download/{file_name}' -vn -ac 2 -ar 48000 '{wav_file}'"
     )
+
+    print("FFmpeg finished")
+    print(output)
 
     await replymsg.edit("📊 Generating spectrogram...")
 
