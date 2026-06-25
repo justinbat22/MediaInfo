@@ -127,7 +127,14 @@ async def ddl_videosample(message, url, duration):
         "Checking direct download url....**", quote=True)
     try:
         file_url = url
-        filename = re.search(".+/(.+)", url).group(1)
+        from urllib.parse import urlparse
+
+        parsed = urlparse(url)
+
+        filename = os.path.basename(parsed.path)
+
+        if not filename:
+            filename = "sample.mkv"
         if len(filename) > 60:
             filename = filename[-60:]
 
