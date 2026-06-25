@@ -6,7 +6,31 @@ from pyrogram import filters, Client
 from TelegramBot.helpers.filters import check_auth
 from TelegramBot.helpers.functions import async_subprocess
 from TelegramBot.helpers.pasting_services import telegraph_image_paste
+import time
 
+_last_update = {}
+
+async def progress(current, total, message):
+    now = time.time()
+
+    if (
+        message.id not in _last_update
+        or now - _last_update[message.id] > 2
+        or current == total
+    ):
+        _last_update[message.id] = now
+
+        percent = current * 100 / total
+        done = int(percent / 5)
+        bar = "█" * done + "░" * (20 - done)
+
+        try:
+            await message.edit_text(
+                f"**Downloading audio...**\n\n"
+                f"`[{bar}] {percent:.1f}%`"
+            )
+        except:
+            pass
 
 @Client.on_message(filters.command(["spek", "sox"]) & check_auth)
 async def generate_spek(_, message: Message):
@@ -39,23 +63,32 @@ async def generate_spek(_, message: Message):
 
     replymsg = await message.reply_text(
         "Generating Spectrogram of the audio. Please wait...", quote=True)
-    await message.download(os.path.join(os.getcwd(), "download", file_name))
+    await message.download(
+        os.path.join(os.getcwd(), "download", file_name),
+        progress=progress,
+        progress_args=(replymsg,),
+    )
+    await replymsg.edit("🎵 Converting audio...")
 
-    if "m4a" in mime.lower() or "audio/mp4" in mime.lower():
-        await async_subprocess(
-            f"ffmpeg -i 'download/{file_name}' -f flac 'download/{file_name}.flac'")
-        await async_subprocess(
-            f"sox 'download/{file_name}.flac' -n remix 1 spectrogram -x 1000  -y 513 -z 120 -w Kaiser -o 'download/{file_name}.png'")
-        os.remove(f"download/{file_name}.flac")
+    wav_file = f"download/{file_name}.wav"
 
-    else:
-        await async_subprocess(
-            f"sox 'download/{file_name}' -n remix 1 spectrogram -x 1000 -y 513 -z 120 -w Kaiser -o 'download/{file_name}.png'")
+    await async_subprocess(
+        f"ffmpeg -y -i 'download/{file_name}' -vn -ac 2 -ar 48000 '{wav_file}'"
+    )
+
+    await replymsg.edit("📊 Generating spectrogram...")
+    
+    await async_subprocess(
+        f"sox '{wav_file}' -n remix 1 spectrogram -x 1000 -y 513 -z 120 -w Kaiser -o 'download/{file_name}.png'"
+    )
+
+    os.remove(wav_file)
 
     if not os.path.exists(f"download/{file_name}.png"):
         return await replymsg.edit(
             "Can not able to generate spectograph of given audio.")
 
+    await replymsg.edit("☁️ Uploading to Telegraph...")
     image_url = await telegraph_image_paste(f"download/{file_name}.png")
     await message.reply_text(f"[{file_name}]({image_url})", quote=True)
 
