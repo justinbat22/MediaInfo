@@ -46,8 +46,21 @@ async def generate_videosample_from_link(
     rand_str = randstr()
     output_path = f"download/{rand_str}_{filename}"
 
-    ffmpeg_command = f"ffmpeg -headers '{headers}' -y -i {file_url} -ss {timestamp} -t 00:0{int(duration)}:00  -c:v copy -c:a copy {output_path}"
+    ffmpeg_command = (
+        f'ffmpeg -nostdin '
+        f'-user_agent "Mozilla/5.0" '
+        f'-headers "{headers}\r\n" '
+        f'-y '
+        f'-ss {timestamp} '
+        f'-i "{file_url}" '
+        f'-t 00:0{int(duration)}:00 '
+        f'-c:v copy '
+        f'-c:a copy '
+        f'"{output_path}"'
+    )
     shell_output = await async_subprocess(ffmpeg_command)
+    print(ffmpeg_command)
+    print(shell_output)
 
     if os.path.getsize(output_path) > 1900000000:
         os.remove(output_path)
@@ -113,7 +126,7 @@ async def ddl_videosample(message, url, duration):
     replymsg = await message.reply_text(
         "Checking direct download url....**", quote=True)
     try:
-        file_url = f"'{url}'"
+        file_url = url
         filename = re.search(".+/(.+)", url).group(1)
         if len(filename) > 60:
             filename = filename[-60:]
@@ -137,10 +150,10 @@ async def ddl_videosample(message, url, duration):
     except MessageNotModified:
         pass
     except Exception as error:
+        import traceback
+        traceback.print_exc()
         LOGGER(__name__).error(error)
-        return await replymsg.edit(
-            "Something went wrong! Make sure that the URL is direct download video file link.")
-
+        return await replymsg.edit(f"`{error}`")
 
 async def telegram_videosample(message, client, duration):
     """
