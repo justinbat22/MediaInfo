@@ -35,7 +35,8 @@ ABOUT_CAPTION = f"""• Python version : {__python_version__}
 • Bot version : {__version__}
 • pyrogram  version : {__pyro_version__}
 
-**Bot Made By**: @Batman_mp3"""
+**🌟Give a Star to our Repo** : https://github.com/subashbuilds/MediaInfo/
+**🧑‍💻Bot Made By**: @Batman_mp3"""
 
 START_ANIMATION = "https://telegra.ph/file/c0857672b427bec8542f6.mp4"
 
